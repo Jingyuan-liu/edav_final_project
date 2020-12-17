@@ -1,0 +1,18 @@
+--- 
+title: "Tech Companies Proformance During Covid-19"
+author: "Siyu Duan, Jingyuan Liu, Haonan Wen"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+
+# Introduction
+
+## Background
+  After Dictionary.com named "pandemic" its Word of the Year, users of the online dictionary elected "unprecedented" as the People's Choice 2020 Word of the Year. When concluding 2020, we find that the global pandemic has induced several unprecedent consequences, and the stock market instability is among the list. In March, we have seen circuit breakers triggered 4 times in a week. Analysts said the 2020 stock market crash and the following global economic recession is the worst since the Great Depression. 
+
+
+## Research Topic
+  As the governments around the world have issued lockdown orders, people are forced to stay at home and do everything virtually. We realize that, if there is only one type of company that stands alone in this Coronavirus crash, it is technology companies. Thus, in this project, we purpose the main research question: **how did companies in the tech industry perform during the Covid-19 period?** 
+  
+## Project Roadmap
+  In particular, we have picked the 5 most representative types of tech companies including Streaming, Online Shopping, Entertainment (Gaming), Work-From-Home, and integrated companies. In the following pages, we will evaluate the companies' performances mainly based on three measurements. First, we look at the companies' behave on the stock market. Moreover, we introduce the measurement *Confidence Index* to evaluate investor confidence in the market. Finally, we also take the companies' quarterly revenue into account. Based on the three measurements described above, we hope our work would provide some insight for those who look back at this unprecedented year.

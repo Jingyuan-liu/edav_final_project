@@ -1,0 +1,402 @@
+---
+title: "Possible Plot (Haonan)"
+author: "Haonan Wen"
+date: "12/6/2020"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(quantmod)
+library(dplyr)
+library("directlabels")
+library(tidyverse)
+library(readr)
+library(lubridate)
+library(forcats)
+library(gridExtra)
+```
+
+
+## Stock line plot (scaled closing price)
+
+### Streaming company
+
+```{r}
+streaming_stock <- read.csv('./data/streaming_stock.csv')
+```
+
+```{r}
+streaming_stock$Date <- as.Date(streaming_stock$Date)
+stream_stock_plot <- ggplot(data = streaming_stock) +
+  geom_line( aes(Date, Close_scale, color = Index, group=Index)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y\n%m-%d") +
+  labs (x = "Dates", 
+        y = "Scaled Closing Price",
+        title = "Scaled stock closing price from 2020-01-01 to 2020-12-11 (Streaming)") +
+  scale_color_manual(values=c("red", "green", "blue", "purple"), 
+                       name="Company",
+                       breaks=c("DIS", "NFLX", "ROKU", "T"),
+                       labels=c("Disney", "Netflix", "Roku", "AT&T"))
+stream_stock_plot
+```
+
+
+### Online shopping company
+
+```{r}
+shopping_stock <- read.csv('./data/shopping_stock.csv')
+```
+
+```{r}
+shopping_stock$Date <- as.Date(shopping_stock$Date)
+shopping_stock_plot <- ggplot(data = shopping_stock) +
+  geom_line( aes(Date, Close_scale, color = Index, group=Index)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y\n%m-%d") +
+  labs (x = "Dates", 
+        y = "Scaled Closing Price",
+        title = "Scaled stock closing price from 2020-01-01 to 2020-12-11 (Online shopping)") +
+  scale_color_manual(values=c("tomato", "violet", "steelblue", "gold", "brown", "black", "seagreen"), 
+                       name="Company",
+                       breaks=c("AMZN", "APRN", "CHWY", "ETSY", "FTCH", "OSTK", "W"),
+                       labels=c("Amazon", "Blue Apron", "Chewy", "Etsy", "Farfetch", "Overstock", "Wayfair"))
+shopping_stock_plot
+```
+
+### Entertainment
+
+```{r}
+entertainment_stock <- read.csv('./data/entertainment_stock.csv')
+```
+
+```{r}
+entertainment_stock$Date <- as.Date(entertainment_stock$Date)
+entertainment_stock_plot <- ggplot(data = entertainment_stock) +
+  geom_line( aes(Date, Close_scale, color = Index, group=Index)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y\n%m-%d") +
+  labs (x = "Dates", 
+        y = "Scaled Closing Price",
+        title = "Scaled stock closing price from 2020-01-01 to 2020-12-11 (Entertainment)") +
+  scale_color_manual(values=c("orange", "skyblue", "salmon", "olivedrab", "maroon"), 
+                       name="Company",
+                       breaks=c("ATVI", "EA", "NTDOY", "SCPL", "TTWO"),
+                       labels=c("Activision Blizzard", "Electronic Arts", "Nintendo", "Sciplay", "Take-Two Interactive"))
+entertainment_stock_plot
+```
+
+### Virtual meeting
+
+```{r}
+wfl_stock <- read.csv('./data/wfl_stock.csv')
+```
+
+```{r}
+wfl_stock$Date <- as.Date(wfl_stock$Date)
+wfl_stock_plot <- ggplot(data = wfl_stock) +
+  geom_line( aes(Date, Close_scale, color = Index, group=Index)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y\n%m-%d") +
+  labs (x = "Dates", 
+        y = "Scaled Close Price",
+        title = "Scaled stock closing price from 2020-01-01 to 2020-12-11 (Virtual Meeting)") +
+  scale_color_manual(values=c("springgreen", "burlywood", "cyan", "darkgrey", "firebrick"), 
+                       name="Company",
+                       breaks=c("CSCO", "EGHT", "LOGM", "RNG", "ZM"),
+                       labels=c("Cisco System", "8×8", "LogMeIn", "RingCentral", "Zoom"))
+wfl_stock_plot
+```
+
+### Integrated
+
+```{r}
+other_stock <- read.csv('./data/other_stock.csv')
+```
+
+```{r}
+other_stock$Date <- as.Date(other_stock$Date)
+other_stock_plot <- ggplot(data = other_stock) +
+  geom_line( aes(Date, Close_scale, color = Index, group=Index)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y\n%m-%d") +
+  labs (x = "Dates", 
+        y = "Scaled Close Price",
+        title = "Scaled stock closing price from 2020-01-01 to 2020-12-11 (Integrated Companies)") +
+  scale_color_manual(values=c("deeppink", "dodgerblue", "chocolate", "forestgreen", "slategrey"), 
+                       name="Company",
+                       breaks=c("FB", "GOOGL", "MSFT", "TWTR", "AAPL"),
+                       labels=c("Facebook", "Google", "Microsoft", "Twitter", "Apple"))
+other_stock_plot
+```
+
+## Individual Investor's Confidence Index Line Plot
+
+```{r}
+CI <- read.csv("./data/CI.csv")
+ci <-CI %>%
+  select("Date","US.Institutional.Index.Value","US.Individual.Index.Value")%>%
+  rename("Institutional_Index"="US.Institutional.Index.Value",
+         "Individual_Index"="US.Individual.Index.Value")
+```
+
+```{r}
+ci <- ci[10:1,] %>%
+  mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
+```
+
+```{r}
+ci_plot <- ggplot(ci, aes(Date, Individual_Index, group = 1)) + 
+  geom_line() +
+  geom_point() +
+  scale_x_date(date_breaks="1 month", date_labels = "%Y-%m") +
+  labs (x = "Month", y = "Individual Investor's Confidence Index", title="Individual Investor's Confidence Index from January 2020 to Octobor 2020")
+ci_plot
+```
+
+## Quaterly Revenue
+
+### Streamming
+
+```{r}
+quarter_rev = read.csv('./data/quarterly_rev.csv')
+```
+
+
+```{r}
+streaming_rev <- quarter_rev %>% 
+  select(Date, netflix, disney, att, roku) %>%
+  gather(key = Company, value = Revenue, -Date) %>%
+  mutate(Company = forcats::fct_reorder2(Company, Date, Revenue)) %>%
+  mutate(Rev_quater_growth = (Revenue - lag(Revenue))/lag(Revenue),
+         Rev_year_growth = (Revenue - lag(Revenue, n = 4L))/lag(Revenue, n = 4L),
+         Date = as.Date(Date)) %>%
+  filter(Date >= as.Date("2019-12-31")) %>%
+  mutate(Date = c("2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3"))%>%
+  group_by(Company) %>%
+  mutate(Revenue_scaled = (Revenue - mean(Revenue)) / sd(Revenue)) %>%
+  ungroup()
+
+```
+
+
+```{r}
+streaming_rev_facet <- rbind(
+  data.frame(Date = streaming_rev$Date, Company = streaming_rev$Company, num = streaming_rev$Rev_year_growth, what = "Year-on-year Growth"),
+  data.frame(Date = streaming_rev$Date, Company = streaming_rev$Company, num = streaming_rev$Revenue_scaled, what = "Scaled Quarterly Revenue")
+)
+
+secondFacet <- FALSE
+streaming_rev_plot_facet <- ggplot(data = streaming_rev_facet) +
+  facet_grid(what~., scale = "free") +
+  geom_line(data=streaming_rev_facet[streaming_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=streaming_rev_facet[streaming_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 4) +
+  geom_line(data=streaming_rev_facet[streaming_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=streaming_rev_facet[streaming_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 4) +
+  scale_y_continuous(name = NULL, labels = function(b) {
+    if(!secondFacet) {
+      secondFacet <<- TRUE 
+      return(paste0(round(b * 100, 0), "%"))
+    }else{
+      return(b)
+    }
+  }
+) +
+  labs(x = "Quarter",
+       title = "2019 Q4 ~ 2020 Q3 Quarterly Revenue and Year-on-year Growth (Streaming)") +
+  scale_color_manual(values=c("purple", "red", "green", "blue"), 
+                       name="Company",
+                       breaks=c("disney", "netflix", "roku", "att"),
+                       labels=c("Disney", "Netflix", "Roku", "AT&T"))
+streaming_rev_plot_facet
+```
+
+### Online shopping
+
+```{r}
+shopping_rev <- quarter_rev %>% 
+  select(Date, amazon, overstock, blue_apron, wayfair, etsy, farfetch) %>%
+  gather(key = Company, value = Revenue, -Date) %>%
+  mutate(Company = forcats::fct_reorder2(Company, Date, Revenue)) %>%
+  mutate(Rev_quater_growth = (Revenue - lag(Revenue))/lag(Revenue),
+         Rev_year_growth = (Revenue - lag(Revenue, n = 4L))/lag(Revenue, n = 4L),
+         Date = as.Date(Date)) %>%
+  filter(Date >= as.Date("2019-12-31")) %>%
+  mutate(Date = c("2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3"))%>%
+  group_by(Company) %>%
+  mutate(Revenue_scaled = (Revenue - mean(Revenue)) / sd(Revenue)) %>%
+  ungroup()
+```
+
+```{r}
+shopping_rev_facet <- rbind(
+  data.frame(Date = shopping_rev$Date, Company = shopping_rev$Company, num = shopping_rev$Rev_year_growth, what = "Year-on-year Growth"),
+  data.frame(Date = shopping_rev$Date, Company = shopping_rev$Company, num = shopping_rev$Revenue_scaled, what = "Scaled Quarterly Revenue")
+)
+
+secondFacet <- FALSE
+shopping_rev_plot_facet <- ggplot(data = shopping_rev_facet) +
+  facet_grid(what~., scale = "free") +
+  geom_line(data=shopping_rev_facet[shopping_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=shopping_rev_facet[shopping_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 4) +
+  geom_line(data=shopping_rev_facet[shopping_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=shopping_rev_facet[shopping_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 4) +
+  scale_y_continuous(name = NULL, labels = function(b) {
+    if(!secondFacet) {
+      secondFacet <<- TRUE 
+      return(paste0(round(b * 100, 0), "%"))
+    }else{
+      return(b)
+    }
+  }
+) +
+  labs(x = "Quarter",
+       title = "2019 Q4~2020 Q3 Quarterly Revenue and Year-on-year Growth (Online Shopping)") +
+  scale_color_manual(values=c("tomato", "seagreen", "brown", "black", "gold", "violet"), 
+                       name="Company",
+                       breaks=c("amazon", "blue_apron", "etsy", "farfetch", "overstock", "wayfair"),
+                       labels=c("Amazon", "Blue Apron", "Etsy", "Farfetch", "Overstock", "Wayfair"))
+shopping_rev_plot_facet
+```
+
+### Entertainment
+
+```{r}
+entertainment_rev <- quarter_rev %>% 
+  select(Date, ea, sciplay, ttwo, atvi) %>%
+  gather(key = Company, value = Revenue, -Date) %>%
+  mutate(Company = forcats::fct_reorder2(Company, Date, Revenue)) %>%
+  mutate(Rev_quater_growth = (Revenue - lag(Revenue))/lag(Revenue),
+         Rev_year_growth = (Revenue - lag(Revenue, n = 4L))/lag(Revenue, n = 4L),
+         Date = as.Date(Date)) %>%
+  filter(Date >= as.Date("2019-12-31")) %>%
+  mutate(Date = c("2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3"))%>%
+  group_by(Company) %>%
+  mutate(Revenue_scaled = (Revenue - mean(Revenue)) / sd(Revenue)) %>%
+  ungroup()
+```
+
+```{r}
+entertainment_rev_facet <- rbind(
+  data.frame(Date = entertainment_rev$Date, Company = entertainment_rev$Company, num = entertainment_rev$Rev_year_growth, what = "Year-on-year Growth"),
+  data.frame(Date = entertainment_rev$Date, Company = entertainment_rev$Company, num = entertainment_rev$Revenue_scaled, what = "Scaled Quarterly Revenue")
+)
+
+secondFacet <- FALSE
+entertainment_rev_plot_facet <- ggplot(data = entertainment_rev_facet) +
+  facet_grid(what~., scale = "free") +
+  geom_line(data=entertainment_rev_facet[entertainment_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=entertainment_rev_facet[entertainment_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 4) +
+  geom_line(data=entertainment_rev_facet[entertainment_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=entertainment_rev_facet[entertainment_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 4) +
+  scale_y_continuous(name = NULL, labels = function(b) {
+    if(!secondFacet) {
+      secondFacet <<- TRUE 
+      return(paste0(round(b * 100, 0), "%"))
+    }else{
+      return(b)
+    }
+  }
+) +
+  labs(x = "Quarter",
+       title = "2019 Q4 ~ 2020 Q3 Quarterly Revenue and Year-on-year Growth (Entertainment)") +
+  scale_color_manual(values=c("orange", "skyblue", "maroon", "olivedrab"), 
+                       name="Company",
+                       breaks=c("atvi", "ea", "sciplay", "ttwo"),
+                       labels=c("Activision Blizzard", "Electronic Arts", "Sciplay", "Take-Two Interactive"))
+entertainment_rev_plot_facet
+```
+
+### Virtual Meeting
+
+```{r}
+wfl_rev <- quarter_rev %>% 
+  select(Date, eght, rng) %>%
+  gather(key = Company, value = Revenue, -Date) %>%
+  mutate(Company = forcats::fct_reorder2(Company, Date, Revenue)) %>%
+  mutate(Rev_quater_growth = (Revenue - lag(Revenue))/lag(Revenue),
+         Rev_year_growth = (Revenue - lag(Revenue, n = 4L))/lag(Revenue, n = 4L),
+         Date = as.Date(Date)) %>%
+  filter(Date >= as.Date("2019-12-31")) %>%
+  mutate(Date = c("2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3"))%>%
+  group_by(Company) %>%
+  mutate(Revenue_scaled = (Revenue - mean(Revenue)) / sd(Revenue)) %>%
+  ungroup()
+```
+
+```{r}
+wfl_rev_facet <- rbind(
+  data.frame(Date = wfl_rev$Date, Company = wfl_rev$Company, num = wfl_rev$Rev_year_growth, what = "Year-on-year Growth"),
+  data.frame(Date = wfl_rev$Date, Company = wfl_rev$Company, num = wfl_rev$Revenue_scaled, what = "Scaled Quarterly Revenue")
+)
+
+secondFacet <- FALSE
+wfl_rev_plot_facet <- ggplot(data = wfl_rev_facet) +
+  facet_grid(what~., scale = "free") +
+  geom_line(data=wfl_rev_facet[wfl_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=wfl_rev_facet[wfl_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 4) +
+  geom_line(data=wfl_rev_facet[wfl_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=wfl_rev_facet[wfl_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 4) +
+  scale_y_continuous(name = NULL, labels = function(b) {
+    if(!secondFacet) {
+      secondFacet <<- TRUE 
+      return(paste0(round(b * 100, 0), "%"))
+    }else{
+      return(b)
+    }
+  }
+) +
+  labs(x = "Quarter",
+       title = "2019 Q4 ~ 2020 Q3 Quarterly Revenue and Year-on-year Growth (Virtual Meeting)") +
+  scale_color_manual(values=c("darkgrey", "burlywood"), 
+                       name="Company",
+                       breaks=c("eght", "rng"),
+                       labels=c("8×8", "RingCentral"))
+wfl_rev_plot_facet
+```
+
+### Integrated
+
+```{r}
+other_rev <- quarter_rev %>% 
+  select(Date, msft, goog, twtr, fb, aapl) %>%
+  gather(key = Company, value = Revenue, -Date) %>%
+  mutate(Company = forcats::fct_reorder2(Company, Date, Revenue)) %>%
+  mutate(Rev_quater_growth = (Revenue - lag(Revenue))/lag(Revenue),
+         Rev_year_growth = (Revenue - lag(Revenue, n = 4L))/lag(Revenue, n = 4L),
+         Date = as.Date(Date)) %>%
+  filter(Date >= as.Date("2019-12-31")) %>%
+  mutate(Date = c("2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3", "2019-Q4", "2020-Q1", "2020-Q2", "2020-Q3"))%>%
+  group_by(Company) %>%
+  mutate(Revenue_scaled = (Revenue - mean(Revenue)) / sd(Revenue)) %>%
+  ungroup()
+```
+
+```{r}
+other_rev_facet <- rbind(
+  data.frame(Date = other_rev$Date, Company = other_rev$Company, num = other_rev$Rev_year_growth, what = "Year-on-year Growth"),
+  data.frame(Date = other_rev$Date, Company = other_rev$Company, num = other_rev$Revenue_scaled, what = "Scaled Quarterly Revenue")
+)
+
+secondFacet <- FALSE
+other_rev_plot_facet <- ggplot(data = other_rev_facet) +
+  facet_grid(what~., scale = "free") +
+  geom_line(data=other_rev_facet[other_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=other_rev_facet[other_rev_facet$what=="Scaled Quarterly Revenue",], aes(Date, num, color = Company, group = Company), size = 4) +
+  geom_line(data=other_rev_facet[other_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 2) +
+  geom_point(data=other_rev_facet[other_rev_facet$what=="Year-on-year Growth",], aes(Date, num, color = Company, group = Company), size = 4) +
+  scale_y_continuous(name = NULL, labels = function(b) {
+    if(!secondFacet) {
+      secondFacet <<- TRUE 
+      return(paste0(round(b * 100, 0), "%"))
+    }else{
+      return(b)
+    }
+  }
+) +
+  labs(x = "Quarter",
+       title = "2019 Q4~2020 Q3 Quarterly Revenue and Year-on-year Growth (Integrated Companies)") +
+  scale_color_manual(values=c("deeppink", "chocolate", "forestgreen", "dodgerblue", "slategrey"), 
+                       name="Company",
+                       breaks=c("fb", "goog", "msft", "twtr", "aapl"),
+                       labels=c("Facebook", "Google", "Microsoft", "Twitter", "Apple"))
+other_rev_plot_facet
+```
+
+

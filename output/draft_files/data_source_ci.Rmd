@@ -1,0 +1,25 @@
+---
+title: "Data Source for Confidence Index"
+author: "Siyu Duan"
+date: "11/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Source:
+Data collection for individual confidence index is supported by Andrew Redleaf of Lynne and Andrew Redleaf Foundation(previously Whitebox advisors). There are two samples that include in the data:  a sample of wealthy individual investors, and a sample of institutional investors. In the years of our interests, the samples of both individual and institutional investors are purchased from InfoUSA( Data Axle: a reputable provider of data). 
+
+The datasets have the U.S. institutional and individual index values from 12/2018 to 10/2020. The One-Year Confidence index is the percentage of respondents giving a number strictly greater than 0 for 'in one year'.Index values are in numeric forms ranging from 0 to 100, and they are reported monthly. 
+
+The potential bias of data comes from two parts. Firstly, the surveys which are randomly sampled to generate datasets conducted at six-month intervals.  Thus, the index value of current month is the average of monthly surveys in the past six months.  It can be observed from the dataset that the deviation of index values among months is small due to the averaging effect, and it may cause bias when we explore the relationship of stock market and confidence index values.     Moreover, the question in the survey is worded to mention the possibilities that the respondent could predict a downturn.  Participants tend to have more passive responses than those who receive more optimistically worded questions. Thus, confidence index values in general is a subjective metric.  
+
+```{r cars}
+setwd("~/Documents/GitHub/tech_companies_during_covid-19")
+library(readr)
+
+CI <- read.csv("data/CI.csv")
+```
+

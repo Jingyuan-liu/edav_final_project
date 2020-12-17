@@ -1,0 +1,26 @@
+---
+title: "data_transformation_ci"
+author: "Siyu Duan"
+date: "11/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Transformation 
+
+For confidence index data,  there is a csv file on the website which is free to download. We can easily use ‘read.csv’  function in R to read in the data.  Drop the ‘standard error’ columns, and rename two ‘ index values’ columns to differentiate between institutional category and individual category. Moreover, the 'Date' column needs to be formatted in a way that corresponds with other two data source.  
+
+```{r}
+setwd("~/Documents/GitHub/tech_companies_during_covid-19")
+library(tidyverse)
+library(readr)
+
+CI <- read.csv("data/CI.csv")
+ci <-CI %>%
+  select("Date","US.Institutional.Index.Value","US.Individual.Index.Value")%>%
+  drop_na()
+```
+

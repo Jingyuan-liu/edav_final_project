@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Data transformation | Tech Companies Proformance During Covid-19</title>
+  <meta name="description" content="Chapter 3 Data transformation | Tech Companies Proformance During Covid-19" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Data transformation | Tech Companies Proformance During Covid-19" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Data transformation | Tech Companies Proformance During Covid-19" />
+  
+  
+  
+
+<meta name="author" content="Siyu Duan, Jingyuan Liu, Haonan Wen" />
+
+
+<meta name="date" content="2020-12-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-sources.html"/>
+<link rel="next" href="missing-values.html"/>
+<script src="libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">SHORT TITLE HERE</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#background"><i class="fa fa-check"></i><b>1.1</b> Background</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#research-topic"><i class="fa fa-check"></i><b>1.2</b> Research Topic</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#project-roadmap"><i class="fa fa-check"></i><b>1.3</b> Project Roadmap</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#quarterly-revenue-of-tech-companies"><i class="fa fa-check"></i><b>2.1</b> Quarterly Revenue of tech companies</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="data-sources.html"><a href="data-sources.html#example-for-extracting-netflix-quarterly-revenue"><i class="fa fa-check"></i><b>2.1.1</b> Example for extracting Netflix quarterly revenue</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#investors-confidence-index"><i class="fa fa-check"></i><b>2.2</b> Investors’ confidence index</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#daily-stock-price"><i class="fa fa-check"></i><b>2.3</b> Daily stock price</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#quarterly-revenue-of-tech-companies-1"><i class="fa fa-check"></i><b>3.1</b> Quarterly Revenue of Tech companies</a></li>
+<li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#daily-stock-price-1"><i class="fa fa-check"></i><b>3.2</b> Daily Stock Price</a></li>
+<li class="chapter" data-level="3.3" data-path="data-transformation.html"><a href="data-transformation.html#investors-confidence-index-1"><i class="fa fa-check"></i><b>3.3</b> Investors’ confidence index</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#introduction-to-the-graph"><i class="fa fa-check"></i><b>6.1</b> Introduction to the Graph</a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#usage"><i class="fa fa-check"></i><b>6.2</b> Usage</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tech Companies Proformance During Covid-19</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-transformation" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
+<div id="quarterly-revenue-of-tech-companies-1" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Quarterly Revenue of Tech companies</h2>
+<p>After scraping the data from macrotrends.net, we have tables of revenue from each of the company separated. Then we would like to merge the tables by date, one column for each table. The import process is in <em>quarterly_rev_import.rmd</em>. Notice that Zoom, Cisco Systems, and 8*8, inc. has different quarterly system from other companies, we will not discuss them here.</p>
+<pre><code>##         Date netflix disney amazon   att roku overstock blue_apron wayfair etsy
+## 1 2018-12-31    4187  15303  72383 47993  276       453        141    2014  200
+## 2 2019-03-31    4521  14922  59700 44827  207       368        142    1945  169
+## 3 2019-06-30    4923  20262  63404 44957  250       374        119    2343  181
+## 4 2019-09-30    5245  19120  69981 44588  261       347         99    2305  198
+## 5 2019-12-31    5467  20858  87437 46821  411       371         94    2533  270
+## 6 2020-03-31    5768  18009  75452 42779  321       352        102    2330  228
+## 7 2020-06-30    6148  11779  88912 40950  356       783        131    4305  429
+## 8 2020-09-30    6436  14742  96145 42340  452       732        112    3840  451
+##   farfetch   ea sciplay ttwo atvi eght rng  msft  goog twtr    fb  aapl
+## 1      196 1289      NA 1249 2382   90 189 32471 39276  909 16914 84310
+## 2      174 1238     118  539 1825   94 201 30571 36339  787 15077 58015
+## 3      209 1209     118  540 1396   97 215 33717 38944  841 16886 53809
+## 4      639 1348     116  858 1282  110 233 33055 40499  824 17652 64040
+## 5       -1 1593     113  930 1986  119 253 36906 46075 1007 21082 91819
+## 6      331 1387     118  761 1788  121 268 35021 41159  808 17737 58313
+## 7      365 1459     166  831 1932  122 278 38033 38297  683 18687 59685
+## 8     1134 1151     151  841 1954  129 304 37154 46173  936 21470 64698</code></pre>
+<div id="standardize-quarterly-revenue" class="section level4" number="3.1.0.1">
+<h4><span class="header-section-number">3.1.0.1</span> Standardize quarterly revenue</h4>
+</div>
+</div>
+<div id="daily-stock-price-1" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Daily Stock Price</h2>
+<p>For each stock, in ‘getSymbols’ function, we defined parameters like stock symbol, start date and end date (in our case is January 1, 2020 to December 11, 2020).
+The stock data will be automatically loaded as an ‘xts’ (Extensible Time Series) object and assigned to a dataset using the stock symbol as the name. To convert the data to dataframe structure, we used ‘as.data.frame(get(stock_index))’ to change the structure. Then, we added <code>Date</code> column and <code>Stock Index</code> column and filtered the data to only keep the closing price.
+With a for-loop, we downloaded the closing price of each stock one by one and appended them together in one dataframe.</p>
+<div id="stock-symbols" class="section level4" number="3.2.0.1">
+<h4><span class="header-section-number">3.2.0.1</span> Stock symbols</h4>
+</div>
+<div id="download-and-import-data" class="section level4" number="3.2.0.2">
+<h4><span class="header-section-number">3.2.0.2</span> Download and import data</h4>
+<pre><code>## downloading  NFLX .....
+## 
+## done.
+## downloading  DIS .....
+## 
+## done.
+## downloading  T .....
+## 
+## done.
+## downloading  ROKU .....
+## 
+## done.</code></pre>
+<pre><code>## downloading  AMZN .....
+## 
+## done.
+## downloading  OSTK .....
+## 
+## done.
+## downloading  APRN .....
+## 
+## done.
+## downloading  W .....
+## 
+## done.
+## downloading  ETSY .....
+## 
+## done.
+## downloading  CHWY .....
+## 
+## done.
+## downloading  FTCH .....
+## 
+## done.</code></pre>
+<pre><code>## downloading  EA .....
+## 
+## done.
+## downloading  NTDOY .....
+## 
+## done.
+## downloading  SCPL .....
+## 
+## done.
+## downloading  TTWO .....
+## 
+## done.
+## downloading  ATVI .....
+## 
+## done.</code></pre>
+<pre><code>## downloading  ZM .....
+## 
+## done.
+## downloading  CSCO .....
+## 
+## done.
+## downloading  EGHT .....
+## 
+## done.
+## downloading  RNG .....
+## 
+## done.
+## downloading  LOGM .....
+## 
+## done.</code></pre>
+<pre><code>## downloading  MSFT .....
+## 
+## done.
+## downloading  GOOGL .....
+## 
+## done.
+## downloading  TWTR .....
+## 
+## done.
+## downloading  FB .....
+## 
+## done.
+## downloading  AAPL .....
+## 
+## done.</code></pre>
+</div>
+<div id="scale-stock-closing-price" class="section level4" number="3.2.0.3">
+<h4><span class="header-section-number">3.2.0.3</span> Scale stock closing price</h4>
+<p>To scale the data, each closing price value is divided by the value of first date (January 2, 2020) for that stock and multiplied by 100.</p>
+</div>
+</div>
+<div id="investors-confidence-index-1" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Investors’ confidence index</h2>
+<p>For confidence index data, there is a csv file on the website which is free to download. We can easily use ‘read.csv’ function in R to read in the data. Drop the ‘standard error’ columns, and rename two ‘ index values’ columns to differentiate between institutional category and individual category. Moreover, the ‘Date’ column needs to be formatted in a way that corresponds with other two data source.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-sources.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="missing-values.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/03-cleaning.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/03-cleaning.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

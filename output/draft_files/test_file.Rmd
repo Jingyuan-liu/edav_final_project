@@ -1,0 +1,62 @@
+---
+title: "test file"
+author: "Siyu Duan"
+date: "12/6/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+setwd("~/Documents/GitHub/tech_companies_during_covid-19")
+devtools::install_github("business-science/tidyquant")
+install.packages("tidyquant")
+library(tidyverse)
+library(readr)
+library(quantmod)
+#library(tidyquant)  
+```
+
+```{r}
+CI <- read.csv("data/CI.csv")
+ci <-CI %>%
+  select(Date,US.Institutional.Index.Value,US.Individual.Index.Value)%>%
+  drop_na()
+
+quarterly = read.csv('data/quarterly_rev.csv')
+quarterly <- quarterly[ -c(1)]
+quarterly
+
+stock_list_streaming <- c("NFLX", "DIS", "T", "ROKU")
+streaming_df <- NULL
+for (idx in seq(length(stock_list_streaming))){
+  stock_index = stock_list_streaming[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-03-01', to = "2020-11-01",)
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  streaming_df = rbind(streaming_df, temp_df)
+}
+streaming_df_new <-streaming_df%>%
+  pivot_wider(names_from = Index, values_from = Close)
+```
+
+
+
+
+```{r}
+#standardize confidence index, revenue, stock price
+standardize <-function(x)(x-mean(x))/sd(x)
+ci_standized<-ci%>%
+  mutate(std_individual_index =  standardize(US.Individual.Index.Value))
+streaming_df_standized<- streaming_df%>%
+   mutate(Close_std =  standardize(Close)) %>%
+  pivot_wider(names_from = Index, values_from = Close_std)
+
+```
+

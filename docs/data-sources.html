@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Data sources | Tech Companies Proformance During Covid-19</title>
+  <meta name="description" content="Chapter 2 Data sources | Tech Companies Proformance During Covid-19" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Data sources | Tech Companies Proformance During Covid-19" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Data sources | Tech Companies Proformance During Covid-19" />
+  
+  
+  
+
+<meta name="author" content="Siyu Duan, Jingyuan Liu, Haonan Wen" />
+
+
+<meta name="date" content="2020-12-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="data-transformation.html"/>
+<script src="libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">SHORT TITLE HERE</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#background"><i class="fa fa-check"></i><b>1.1</b> Background</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#research-topic"><i class="fa fa-check"></i><b>1.2</b> Research Topic</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#project-roadmap"><i class="fa fa-check"></i><b>1.3</b> Project Roadmap</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#quarterly-revenue-of-tech-companies"><i class="fa fa-check"></i><b>2.1</b> Quarterly Revenue of tech companies</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="data-sources.html"><a href="data-sources.html#example-for-extracting-netflix-quarterly-revenue"><i class="fa fa-check"></i><b>2.1.1</b> Example for extracting Netflix quarterly revenue</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#investors-confidence-index"><i class="fa fa-check"></i><b>2.2</b> Investors’ confidence index</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#daily-stock-price"><i class="fa fa-check"></i><b>2.3</b> Daily stock price</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#quarterly-revenue-of-tech-companies-1"><i class="fa fa-check"></i><b>3.1</b> Quarterly Revenue of Tech companies</a></li>
+<li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#daily-stock-price-1"><i class="fa fa-check"></i><b>3.2</b> Daily Stock Price</a></li>
+<li class="chapter" data-level="3.3" data-path="data-transformation.html"><a href="data-transformation.html#investors-confidence-index-1"><i class="fa fa-check"></i><b>3.3</b> Investors’ confidence index</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#introduction-to-the-graph"><i class="fa fa-check"></i><b>6.1</b> Introduction to the Graph</a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#usage"><i class="fa fa-check"></i><b>6.2</b> Usage</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tech Companies Proformance During Covid-19</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-sources" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Data sources</h1>
+<div id="quarterly-revenue-of-tech-companies" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Quarterly Revenue of tech companies</h2>
+<p><strong>The data is collected by using rvest package to scrap data from macrotrends.net. The code below is an example of how data is scraped using Netflix. Other data gathering methods considered are grabbing data directly from each company’s financial report as well as copy and paste data from Yahoo Finance. However, I choose to scrap the data because it is the easiest way to download data for multiple companies and all the data has been validated with the company’s public financial report or Yahoo Finance to prevent errors. Some issue with the data now is that both variables are in character type and we would like the first to be date variable and second to be numerical. This problem will be handled in Data transformation part. </strong></p>
+<div id="example-for-extracting-netflix-quarterly-revenue" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Example for extracting Netflix quarterly revenue</h3>
+<pre><code>##          Date Revenue
+## 1  2020-09-30  $6,436
+## 2  2020-06-30  $6,148
+## 3  2020-03-31  $5,768
+## 4  2019-12-31  $5,467
+## 5  2019-09-30  $5,245
+## 6  2019-06-30  $4,923
+## 7  2019-03-31  $4,521
+## 8  2018-12-31  $4,187
+## 9  2018-09-30  $3,999
+## 10 2018-06-30  $3,907</code></pre>
+</div>
+</div>
+<div id="investors-confidence-index" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Investors’ confidence index</h2>
+<p><strong>Data collection for individual confidence index is supported by Andrew Redleaf of Lynne and Andrew Redleaf Foundation(previously Whitebox advisors). There are two samples that include in the data: a sample of wealthy individual investors, and a sample of institutional investors. In the years of our interests, the samples of both individual and institutional investors are purchased from InfoUSA( Data Axle: a reputable provider of data).</strong>
+<strong>datasets have the U.S. institutional and individual index values from 12/2018 to 10/2020. The One-Year Confidence index is the percentage of respondents giving a number strictly greater than 0 for ‘in one year’.Index values are in numeric forms ranging from 0 to 100, and they are reported monthly.</strong>
+<strong>potential bias of data comes from two parts. Firstly, the surveys which are randomly sampled to generate datasets conducted at six-month intervals. Thus, the index value of current month is the average of monthly surveys in the past six months. It can be observed from the dataset that the deviation of index values among months is small due to the averaging effect, and it may cause bias when we explore the relationship of stock market and confidence index values. Moreover, the question in the survey is worded to mention the possibilities that the respondent could predict a downturn. Participants tend to have more passive responses than those who receive more optimistically worded questions. Thus, confidence index values in general is a subjective metric. <a href="https://som.yale.edu/faculty-research-centers/centers-initiatives/international-center-for-finance/data/stock-market-confidence-indices/united-states-stock-market-confidence-indices" class="uri">https://som.yale.edu/faculty-research-centers/centers-initiatives/international-center-for-finance/data/stock-market-confidence-indices/united-states-stock-market-confidence-indices</a> </strong></p>
+</div>
+<div id="daily-stock-price" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Daily stock price</h2>
+<p><strong>For each of the companies we choosed, the historical stock price data can be quickly loaded using getSymbols function in ‘quantmod’ package. Using ‘yahoo’ as the sourcing method, we load the past daily stock prices including “Open price”, “High price”, “Low price”, “Close price”, “Volume” and “Adjusted price” from January 1, 2020 to December 11, 2020.</strong></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-transformation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/02-data.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/02-data.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

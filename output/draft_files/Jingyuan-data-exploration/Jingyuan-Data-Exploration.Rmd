@@ -1,0 +1,81 @@
+---
+title: "Jingyuan Data Explore"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(parcoords)
+library(d3r)
+library(tidyr)
+```
+
+## Import Revenue
+```{r Revenue}
+
+revenue = read.csv('data/quarterly_rev.csv')
+revenue <- revenue[ -c(1)]
+revenue_streaming = revenue[, 1:6]
+rev_19 = revenue_streaming[1:4,]
+rev_20 = revenue_streaming[5:8,]
+
+x = revenue_streaming['Date']
+
+```
+
+## Import confidence index
+```{r}
+ci = read.csv('data/CI.csv')
+ci = ci[1:228,]
+ci$US.Individual.Index.Value = as.numeric(ci$US.Individual.Index.Value)
+
+ci_quarter_ins = scale(colMeans(matrix(ci$US.Institutional.Index.Value, nrow = 3)))
+ci_quarter_ind = scale(colMeans(matrix(ci$US.Individual.Index.Value, nrow = 3)))
+ci_quarter = data.frame(ci_quarter_ins, ci_quarter_ind)
+colnames(ci_quarter) = c('US.Institutional.Index', 'US.Individual.Index.Value')
+
+ins_ind <- ggplot(ci_quarter, aes(US.Institutional.Index, US.Individual.Index.Value)) + 
+  geom_point() + 
+  ggtitle("Quarterly Individual Index vs. Institutional Index in past 9 years")
+ins_ind
+```
+
+## Revenue and CI in past 2 years (compare with COVID-19). Parallel graph
+```{r}
+df = data.frame(x, ci_quarter[1:8,])
+rev_normalize = data.frame(revenue[,1], scale(revenue_streaming[,2:6]))
+colnames(rev_normalize)[1] = 'Date'
+
+rev_with_ci = merge(rev_normalize, df, by.x = 'Date', by.y = 'Date', all= TRUE)
+row.names(rev_with_ci) = rev_with_ci$Date
+colnames(rev_with_ci)[7] = 'Institutional'
+colnames(rev_with_ci)[8] = 'Individual'
+
+
+graph <- parcoords(rev_with_ci,
+  rownames = FALSE,
+  height = 450, 
+    color = list(
+    # discrete or categorical column
+    colorScale = "scaleOrdinal",
+    colorBy = "Date",
+    colorScheme = "schemeCategory10"
+  ), withD3 = TRUE,
+   brushMode = '1D-axes'
+  )
+
+graph
+```
+
+## CI vs Revenue Scatterplot (Streaming)
+```{r}
+rev_pivot = rev_normalize %>% pivot_longer(!'Date', names_to = 'company')
+rev_pivot = merge(rev_pivot, df, by = 'Date',no.dups = FALSE)
+
+graph <- ggplot(rev_pivot, aes(value, US.Individual.Index.Value, color = company, shape = company)) + geom_point() + 
+  ggtitle('Scatterplot of normalized revenue vs. Individual Index Value') + 
+  labs(x = 'Normalized Quarterly Revenue', y = 'Quarterly Average Individual Index Value') +
+    geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+graph
+```

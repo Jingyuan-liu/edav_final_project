@@ -1,0 +1,3 @@
+# Missing values
+LogMeIn (LOGM)'s stock price contains missing values. The closing prices from September 1, 2020 to October 31, 2020 are missing. They are a contiguous piece of time series. We plan to keep them for now.
+\n There are no missing values involved in other parts. 

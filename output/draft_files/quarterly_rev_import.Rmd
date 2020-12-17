@@ -1,0 +1,62 @@
+---
+title: "Quarterly Revenue Import"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rvest)
+
+netflix = read_html('https://www.macrotrends.net/stocks/charts/NFLX/netflix/revenue')
+disney = read_html('https://www.macrotrends.net/stocks/charts/DIS/disney/revenue')
+amazon = read_html('https://www.macrotrends.net/stocks/charts/AMZN/amazon/revenue')
+att = read_html('https://www.macrotrends.net/stocks/charts/T/at-t/revenue')
+roku = read_html('https://www.macrotrends.net/stocks/charts/ROKU/roku/revenue')
+overstock = read_html('https://www.macrotrends.net/stocks/charts/OSTK/overstock/revenue')
+blue_apron = read_html('https://www.macrotrends.net/stocks/charts/APRN/blue-apron-holdings/revenue')
+wayfair = read_html('https://www.macrotrends.net/stocks/charts/W/wayfair/revenue')
+etsy = read_html('https://www.macrotrends.net/stocks/charts/ETSY/etsy/revenue')
+chewy = read_html('https://www.macrotrends.net/stocks/charts/CHWY/chewy/revenue')
+farfetch = read_html('https://www.macrotrends.net/stocks/charts/FTCH/farfetch/revenue')
+ea = read_html('https://www.macrotrends.net/stocks/charts/EA/electronic-arts/revenue')
+sciplay = read_html('https://www.macrotrends.net/stocks/charts/SCPL/sciplay/revenue')
+ttwo = read_html('https://www.macrotrends.net/stocks/charts/TTWO/take-two-interactive-software/revenue')
+atvi = read_html('https://www.macrotrends.net/stocks/charts/ATVI/activision-blizzard/revenue')
+zoom = read_html('https://www.macrotrends.net/stocks/charts/ZM/zoom-video-communications/revenue')
+csco = read_html('https://www.macrotrends.net/stocks/charts/CSCO/cisco/revenue')
+eght = read_html('https://www.macrotrends.net/stocks/charts/EGHT/8x8-inc/revenue')
+rng = read_html('https://www.macrotrends.net/stocks/charts/RNG/ringcentral/revenue')
+msft = read_html('https://www.macrotrends.net/stocks/charts/MSFT/microsoft/revenue')
+goog = read_html('https://www.macrotrends.net/stocks/charts/GOOG/alphabet/revenue')
+twtr = read_html('https://www.macrotrends.net/stocks/charts/TWTR/twitter/revenue')
+fb = read_html('https://www.macrotrends.net/stocks/charts/FB/facebook/revenue')
+companies = list(netflix, disney, amazon, att, roku, overstock, blue_apron, wayfair, etsy, chewy, farfetch, ea, sciplay, ttwo, 
+           atvi, zoom, csco, eght, rng, msft, goog, twtr, fb)
+company_names = c('netflix', 'disney', 'amazon', 'att', 'roku', 'overstock', 'blue_apron', 'wayfair', 'etsy', 'chewy', 'farfetch', 'ea', 'sciplay', 'ttwo', 'atvi', 'zoom', 'csco', 'eght', 'rng', 'msft', 'goog', 'twtr', 'fb')
+
+
+
+df_list = list()
+for (i in 1:23) {
+  q = companies[[i]] %>% 
+  html_nodes(xpath = '//*[@id="style-1"]/div[2]/table') %>% html_table
+  
+  col_names <- c('Date', company_names[i])
+  q = data.frame(q)[1:8, ]
+  names(q) <- col_names
+  q[, company_names[i]] <- as.numeric(gsub("[\\$,]", "", q[,2]))
+  df_list[[company_names[i]]] = q
+
+}
+
+joined = df_list[[1]]
+for (j in 2:23) {
+  joined = merge(joined, df_list[[j]], by = 'Date', all.x = TRUE)
+}
+
+joined = joined[-c(11, 17, 18)]
+write.csv(joined, file='quarterly_rev.csv', index = FALSE)
+```

@@ -1,0 +1,142 @@
+---
+author: Haonan Wen
+title: "Stock Price Data Load and Transformation"
+output: html_document
+---
+## Data Source
+
+For each of the companies we choosed, the historical stock price data can be quickly loaded using getSymbols function of **quantmod** package in R. Using 'yahoo' as the sourcing method, we load past daily stock prices including “Open price”, “High price”, “Low price”, “Close price”, “Volume” and “Adjusted price” from March 1, 2020 to November 1, 2020.
+
+## Data Transformation
+
+First of all, load the required package, 'quantmod'. 
+
+```{r}
+library(quantmod)
+```
+
+For each stock, in 'getSymbols' function, define some parameters like which stock data need to load and find out their symbols, the start date and the end date of the data (in our case, March 1, 2020 to November 1, 2020).
+
+When using getSymbols, the data will be automatically loaded as an ‘xts’ (Extensible Time Series) object and assigned to a dataset using the stock symbol as the data name. To convert the data to dataframe structure, use as.data.frame(get(stock_index)) to change the structure. Then, add `Date` column and `Stock Index` column. Filter the data and only keep the closing price.
+
+With a for-loop, we get the closing price of each stock one by one and append them together in a dataframe. 
+
+```{r}
+library(dplyr)
+stock_list_streaming <- c("NFLX", "DIS", "T", "ROKU")
+stock_list_shopping <- c("AMZN", "OSTK", "APRN", "W", "ETSY", "CHWY", "FTCH")
+stock_list_entertainment <- c("EA", "NTDOY", "SCPL", "TTWO", "ATVI")
+stock_list_wfl <- c("ZM", "CSCO", "EGHT", "RNG", "LOGM")
+stock_list_other <- c("MSFT", "GOOGL", "TWTR", "FB")
+```
+
+```{r}
+#streaming
+streaming_df <- NULL
+for (idx in seq(length(stock_list_streaming))){
+  stock_index = stock_list_streaming[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-03-01', to = "2020-11-01",)
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  streaming_df = rbind(streaming_df, temp_df)
+}
+```
+
+```{r}
+#online_shopping
+shopping_df <- NULL
+for (idx in seq(length(stock_list_shopping))){
+  stock_index = stock_list_shopping[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-03-01', to = "2020-11-01",)
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  shopping_df = rbind(shopping_df, temp_df)
+}
+```
+
+```{r}
+# entertainment
+entertainment_df <- NULL
+for (idx in seq(length(stock_list_entertainment))){
+  stock_index = stock_list_entertainment[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-03-01', to = "2020-11-01",)
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  entertainment_df = rbind(entertainment_df, temp_df)
+}
+```
+
+```{r}
+# virtual meeting
+wfl_df <- NULL
+for (idx in seq(length(stock_list_wfl))){
+  stock_index = stock_list_wfl[idx]
+  getSymbols(stock_index, verbose = TRUE,
+             from = '2020-03-01', to = "2020-11-01",)
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  wfl_df = rbind(wfl_df, temp_df)
+}
+```
+
+```{r}
+other_df <- NULL
+for (idx in seq(length(stock_list_other))){
+  stock_index = stock_list_other[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-03-01', to = "2020-11-01",)
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  other_df = rbind(other_df, temp_df)
+}
+```
+
+To scale the data, each price value is divided by the first value for that stock and multiplied by 100.
+
+```{r}
+scale <- function(tidydf){
+  tidydf <- tidydf %>% group_by(Index) %>%
+    mutate(Close_scale = round(100*Close/Close[1], 2)) %>%
+    ungroup()
+}
+
+streaming_df <- scale(streaming_df)
+shopping_df <- scale(shopping_df)
+entertainment_df <- scale(entertainment_df)
+wfl_df <- scale(wfl_df)
+other_df <- scale(other_df)
+```
+
+
+## Missing Values
+
+LogMeIn (LOGM) contains missing values. Its closing prices from September 1, 2020 to October 31, 2020 are missing.
+

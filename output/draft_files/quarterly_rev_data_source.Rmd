@@ -1,0 +1,26 @@
+---
+title: "Data Source Jingyuan"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Source: Quarterly Revenue
+This part of data is collected by Jingyuan Liu.
+The data is collected by using rvest package to scrap data from macrotrends.net. The code below is an example of how data is scraped using Netflix. Other data gathering methods considered are grabbing data directly from each company's financial report as well as copy and paste data from Yahoo Finance. However, I choose to scrap the data because it is the easiest way to download data for multiple companies and all the data has been validated with the company's public financial report or Yahoo Finance to prevent errors. Some issue with the data now is that both variables are in character type and we would like the first to be date variable and second to be numerical. This problem will be handled in Data transformation part. 
+
+```{r}
+library(rvest)
+test = read_html('https://www.macrotrends.net/stocks/charts/NFLX/netflix/revenue')
+netflix = read_html('https://www.macrotrends.net/stocks/charts/NFLX/netflix/revenue')
+
+netflix = netflix %>% 
+  html_nodes(xpath = '//*[@id="style-1"]/div[2]/table') %>% html_table
+
+netflix = data.frame(netflix)
+col_names <- c('Date','Revenue')
+names(netflix) = col_names
+head(netflix, 10)
+```

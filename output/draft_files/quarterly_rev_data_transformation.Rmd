@@ -1,0 +1,18 @@
+---
+title: "data transformation"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Transformation for Quarterly Revenue
+After scraping the data from macrotrends.net, we have tables of revenue from each of the company separated. Then we would like to merge the tables by date, one column for each table. The import process is in *quarterly_rev_import.rmd*. Notice that Zoom, Cisco Systems, and 8*8, inc. has different quarterly system from other companies, we will not discuss them here.
+
+```{r}
+quarterly = read.csv('quarterly_rev.csv')
+quarterly <- quarterly[ -c(1)]
+quarterly
+```
+

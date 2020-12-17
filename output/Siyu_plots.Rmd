@@ -1,0 +1,169 @@
+---
+title: "Siyu Plots"
+author: "Siyu Duan"
+date: "12/15/2020"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+####CI and daily stock price graph 
+```{r}
+streaming_stk <-read.csv('./output/scaled_streaming_stock.csv')
+shopping_stk<-read.csv('./output/scaled_shopping_stock.csv')
+entertainment_stk<-read.csv('./output/scaled_entertainment_stock.csv')
+wfh_stk<-read.csv('./output/scaled_wfl_stock.csv')
+other_stk<-read.csv('./output/scaled_other_stock.csv')
+
+
+
+#change the format of the stock data
+streaming_stk_new<- streaming_stk%>%
+  pivot_wider(names_from = Index, values_from = Close)
+shopping_stk_new<- shopping_stk%>%
+  pivot_wider(names_from = Index, values_from = Close)
+entertainment_stk_new<- entertainment_stk%>%
+  pivot_wider(names_from = Index, values_from = Close)
+wfh_stk_new<- wfh_stk%>%
+  pivot_wider(names_from = Index, values_from = Close)
+other_stk_new<- other_stk%>%
+  pivot_wider(names_from = Index, values_from = Close)
+
+
+#standardize stock price 
+standardize <-function(x)(x-mean(x,na.rm=TRUE))/sd(x, na.rm =TRUE)
+
+std_streaming_stock <-streaming_stk_new %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=streaming_stk_new$Date)%>%
+  mutate(Date=as.Date(Date, format="%Y-%m-%d"))%>%
+  pivot_longer(!Date, names_to="Index", values_to="Close")
+
+std_shopping_stock <-shopping_stk_new %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=shopping_stk_new$Date)%>%
+  mutate(Date=as.Date(Date, format="%Y-%m-%d"))%>%
+  pivot_longer(!Date, names_to="Index", values_to="Close")
+
+std_entertainment_stock <-entertainment_stk_new %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=entertainment_stk_new$Date)%>%
+  mutate(Date=as.Date(Date, format="%Y-%m-%d"))%>%
+  pivot_longer(!Date, names_to="Index", values_to="Close") 
+
+std_wfh_stock <-wfh_stk_new %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=wfh_stk_new$Date)%>%
+  mutate(Date=as.Date(Date, format="%Y-%m-%d"))%>%
+  pivot_longer(!Date, names_to="Index", values_to="Close")
+
+std_other_stock <-other_stk_new %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=other_stk_new$Date)%>%
+  mutate(Date=as.Date(Date, format="%Y-%m-%d"))%>%
+  pivot_longer(!Date, names_to="Index", values_to="Close")
+
+```
+
+```{r}
+#Standardized CI 
+ci_standized <- read.csv('./output/ci_standized')
+
+ci_standized_copy <-ci_standized%>%
+  mutate(Date=as.Date(Date, format="%Y-%m-%d"))%>%
+  filter(Date>="2020-3-1"&Date<="2020-10-1")
+
+
+```
+
+
+## part 1 plots:  confidence index and stock closing price(standardized) (daily)
+```{r}
+p1<-ggplot(ci_standized_copy,aes(Date, std_ind_index))
+
+
+p1<-p1+ geom_bar(stat="identity",alpha=0.75)+
+  labs(y="standardized confidence index")
+
+p1+ geom_line(aes(Date, Close, color=Index), std_streaming_stock )+
+  scale_x_date(date_breaks = "1 month", date_labels = "%m-%d") +
+  labs(title="Standardized stock closing price (bar) & Standardized confidence index(line) \nfrom 2020-03-01 to 2020-11-01 (Streaming)")+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p1+ geom_line(aes(Date, Close, color=Index), std_shopping_stock  )+
+  scale_x_date(date_breaks = "1 month", date_labels = "%m-%d") +
+  labs(title="Standardized stock closing price (bar) & Standardized confidence index(line) \nfrom 2020-03-01 to 2020-11-01 (Online shopping)", color="Stock Index")+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p1+ geom_line(aes(Date, Close, color=Index), std_entertainment_stock )+
+  scale_x_date(date_breaks = "1 month", date_labels = "%m-%d") +
+  labs(title="Standardized stock closing price (bar) & Standardized confidence index(line) \nfrom 2020-03-01 to 2020-11-01 (Entertainment)", color="Stock Index")+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p1+ geom_line(aes(Date, Close, color=Index), std_wfh_stock  )+
+  scale_x_date(date_breaks = "1 month", date_labels = "%m-%d") +
+  labs(title="Standardized stock closing price (bar) & Standardized confidence index(line) \nfrom 2020-03-01 to 2020-11-01 (work from home)", color="Stock Index")+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p1+ geom_line(aes(Date, Close, color=Index), std_other_stock  )+
+  scale_x_date(date_breaks = "1 month", date_labels = "%m-%d") +
+  labs(title="Standardized stock closing price (bar) & Standardized confidence index(line) \nfrom 2020-03-01 to 2020-11-01 (Other category)", color="Stock Index")+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+```
+
+
+##Part 2: parrell coordinate plots: CI & revenue (quarterly) 
+```{r}
+ci_quarterly <-read.csv("./data/ci_quarterly.csv")
+#Standardize monthly ci_index
+standardize <-function(x)(x-mean(x))/sd(x)
+ci_q_standized<-ci_quarterly%>%
+  mutate(std_ind_index =  standardize(US.Individual.Index.Value),
+         Date =paste(Year, Quarter, sep="-"))%>%
+  select(Date,std_ind_index)
+
+quarterly = read.csv('./data/quarterly_rev.csv')
+standardize <-function(x)(x-mean(x,na.rm=TRUE))/sd(x, na.rm =TRUE)
+std_rev <-quarterly %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=quarterly$Date)%>%
+  mutate(Date=as.Date(Date))%>%
+  pivot_longer(!Date,names_to="Index", values_to="std_Revenue")
+
+```
+
+
+
+```{r}
+
+p2<- ggplot(ci_q_standized,aes(Date, std_ind_index))
+
+
+p2<-p2+ geom_bar(stat="identity",alpha=0.75)+
+  labs(y="standardized confidence index")
+
+p2+ geom_line(aes(Date, std_Revenue, color=Index), std_rev )+
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y-%m") +
+  labs(title="Standardized stock closing price (bar) & Standardized confidence index(line) \nfrom 2020-03-01 to 2020-11-01 (Streaming)")+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+
+
+```{r}

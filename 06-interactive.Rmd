@@ -1,0 +1,18 @@
+# Interactive component
+
+## Introduction to the Graph
+The interactive plot below allows user to choose any set of stocks they want to compare in one graph. In this way, the user can freely explore all combinations of stocks which may take up to $2^{25}$ static graphs to present. All the closing price are scaled so that they all start at 100.
+
+By clicking the colored button before the name of each stock, a line will be added to the graph with the same color as the button. 
+
+## Usage
+
+1. When putting mouse over the colored button, the company's full name will be shown in the left after 'Company name:'.
+2. By clicking the colored button before the name of each stock, a line will be added to the plot with the same color as the button and the y-axis will be scaled accordingly. A filled button indicates the stock being selected.
+3. By clicking the black button at the top of each category, all stocks from that category will be added to the plot. The category buttons only serve for selecting and not for unselecting.
+4. The clear button at right will clear all selection and thus clear the plot.
+
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+
+<iframe src="https://vizhub.com/Jingyuan-liu/944a61da7be64b6e95d9edb06e2d1ab6?mode=embed" title="Tech Stock Visualization" height="650" width='800'></iframe>

@@ -1,0 +1,519 @@
+--- 
+title: "YOUR TITLE HERE"
+author: "YOUR NAMES HERE"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+
+<!--chapter:end:index.Rmd-->
+
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data sources
+```{r,eval=FALSE}
+library(rvest)
+library(readr)
+library(quantmod)
+```
+
+## Quarterly Revenue of tech companies
+**The data is collected by using rvest package to scrap data from macrotrends.net. The code below is an example of how data is scraped using Netflix. Other data gathering methods considered are grabbing data directly from each company's financial report as well as copy and paste data from Yahoo Finance. However, I choose to scrap the data because it is the easiest way to download data for multiple companies and all the data has been validated with the company's public financial report or Yahoo Finance to prevent errors. Some issue with the data now is that both variables are in character type and we would like the first to be date variable and second to be numerical. This problem will be handled in Data transformation part. **
+```{r}
+netflix = read_html('https://www.macrotrends.net/stocks/charts/NFLX/netflix/revenue')
+disney = read_html('https://www.macrotrends.net/stocks/charts/DIS/disney/revenue')
+amazon = read_html('https://www.macrotrends.net/stocks/charts/AMZN/amazon/revenue')
+att = read_html('https://www.macrotrends.net/stocks/charts/T/at-t/revenue')
+roku = read_html('https://www.macrotrends.net/stocks/charts/ROKU/roku/revenue')
+overstock = read_html('https://www.macrotrends.net/stocks/charts/OSTK/overstock/revenue')
+blue_apron = read_html('https://www.macrotrends.net/stocks/charts/APRN/blue-apron-holdings/revenue')
+wayfair = read_html('https://www.macrotrends.net/stocks/charts/W/wayfair/revenue')
+etsy = read_html('https://www.macrotrends.net/stocks/charts/ETSY/etsy/revenue')
+chewy = read_html('https://www.macrotrends.net/stocks/charts/CHWY/chewy/revenue')
+farfetch = read_html('https://www.macrotrends.net/stocks/charts/FTCH/farfetch/revenue')
+ea = read_html('https://www.macrotrends.net/stocks/charts/EA/electronic-arts/revenue')
+sciplay = read_html('https://www.macrotrends.net/stocks/charts/SCPL/sciplay/revenue')
+ttwo = read_html('https://www.macrotrends.net/stocks/charts/TTWO/take-two-interactive-software/revenue')
+atvi = read_html('https://www.macrotrends.net/stocks/charts/ATVI/activision-blizzard/revenue')
+zoom = read_html('https://www.macrotrends.net/stocks/charts/ZM/zoom-video-communications/revenue')
+csco = read_html('https://www.macrotrends.net/stocks/charts/CSCO/cisco/revenue')
+eght = read_html('https://www.macrotrends.net/stocks/charts/EGHT/8x8-inc/revenue')
+rng = read_html('https://www.macrotrends.net/stocks/charts/RNG/ringcentral/revenue')
+msft = read_html('https://www.macrotrends.net/stocks/charts/MSFT/microsoft/revenue')
+goog = read_html('https://www.macrotrends.net/stocks/charts/GOOG/alphabet/revenue')
+twtr = read_html('https://www.macrotrends.net/stocks/charts/TWTR/twitter/revenue')
+fb = read_html('https://www.macrotrends.net/stocks/charts/FB/facebook/revenue')
+aapl = read_html('https://www.macrotrends.net/stocks/charts/AAPL/apple/revenue')
+
+companies = list(netflix, disney, amazon, att, roku, overstock, blue_apron, wayfair, etsy, chewy, farfetch, ea, sciplay, ttwo, 
+           atvi, zoom, csco, eght, rng, msft, goog, twtr, fb, aapl)
+company_names = c('netflix', 'disney', 'amazon', 'att', 'roku', 'overstock', 'blue_apron', 'wayfair', 'etsy', 'chewy', 'farfetch', 'ea', 'sciplay', 'ttwo', 'atvi', 'zoom', 'csco', 'eght', 'rng', 'msft', 'goog', 'twtr', 'fb', 'aapl')
+
+df_list = list()
+for (i in 1:24) {
+  q = companies[[i]] %>% 
+  html_nodes(xpath = '//*[@id="style-1"]/div[2]/table') %>% html_table
+  
+  col_names <- c('Date', company_names[i])
+  q = data.frame(q)[1:8, ]
+  names(q) <- col_names
+  q[, company_names[i]] <- as.numeric(gsub("[\\$,]", "", q[,2]))
+  df_list[[company_names[i]]] = q
+
+}
+
+joined = df_list[[1]]
+for (j in 2:24) {
+  joined = merge(joined, df_list[[j]], by = 'Date', all.x = TRUE)
+}
+
+joined = joined[-c(11, 17, 18)]
+write.csv(joined, file='./data/quarterly_rev.csv', index = FALSE)
+```
+
+### Example for extracting Netflix quarterly revenue 
+```{r}
+test = read_html('https://www.macrotrends.net/stocks/charts/NFLX/netflix/revenue')
+netflix = read_html('https://www.macrotrends.net/stocks/charts/NFLX/netflix/revenue')
+
+netflix = netflix %>% 
+  html_nodes(xpath = '//*[@id="style-1"]/div[2]/table') %>% html_table
+
+netflix = data.frame(netflix)
+col_names <- c('Date','Revenue')
+names(netflix) = col_names
+head(netflix, 10)
+```
+
+
+## Investors' confidence index
+**Data collection for individual confidence index is supported by Andrew Redleaf of Lynne and Andrew Redleaf Foundation(previously Whitebox advisors). There are two samples that include in the data:  a sample of wealthy individual investors, and a sample of institutional investors. In the years of our interests, the samples of both individual and institutional investors are purchased from InfoUSA( Data Axle: a reputable provider of data).** 
+**\nThe datasets have the U.S. institutional and individual index values from 12/2018 to 10/2020. The One-Year Confidence index is the percentage of respondents giving a number strictly greater than 0 for 'in one year'.Index values are in numeric forms ranging from 0 to 100, and they are reported monthly.** 
+**\nThe potential bias of data comes from two parts. Firstly, the surveys which are randomly sampled to generate datasets conducted at six-month intervals.  Thus, the index value of current month is the average of monthly surveys in the past six months.  It can be observed from the dataset that the deviation of index values among months is small due to the averaging effect, and it may cause bias when we explore the relationship of stock market and confidence index values.     Moreover, the question in the survey is worded to mention the possibilities that the respondent could predict a downturn.  Participants tend to have more passive responses than those who receive more optimistically worded questions. Thus, confidence index values in general is a subjective metric.  https://som.yale.edu/faculty-research-centers/centers-initiatives/international-center-for-finance/data/stock-market-confidence-indices/united-states-stock-market-confidence-indices ** 
+
+```{r}
+CI <- read.csv("./data/CI.csv")
+```
+
+## Daily stock price 
+**For each of the companies we choosed, the historical stock price data can be quickly loaded using getSymbols function in 'quantmod' package. Using 'yahoo' as the sourcing method, we load the past daily stock prices including “Open price”, “High price”, “Low price”, “Close price”, “Volume” and “Adjusted price” from January 1, 2020 to December 11, 2020.**
+
+<!--chapter:end:02-data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data transformation
+```{r, eval=FALSE}
+library(readr)
+library(tidyverse)
+library(quantmod)
+library(dplyr)
+```
+## Quarterly Revenue of Tech companies
+\n After scraping the data from macrotrends.net, we have tables of revenue from each of the company separated. Then we would like to merge the tables by date, one column for each table. The import process is in *quarterly_rev_import.rmd*. Notice that Zoom, Cisco Systems, and 8*8, inc. has different quarterly system from other companies, we will not discuss them here.
+
+```{r}
+quarterly = read.csv('./data/quarterly_rev.csv')
+quarterly <- quarterly[ -c(1)]
+quarterly
+```
+
+
+#### Standardize quarterly revenue
+```{r}
+standardize <-function(x)(x-mean(x,na.rm=TRUE))/sd(x, na.rm =TRUE)
+std_rev <-quarterly %>%
+  select_if(is.numeric)%>%
+  map_df(~standardize(.x))%>%
+  add_column(Date=quarterly$Date)
+  
+
+```
+
+
+## Daily Stock Price 
+For each stock, in 'getSymbols' function, we defined parameters like stock symbol, start date and end date (in our case is January 1, 2020 to December 11, 2020).
+\n The stock data will be automatically loaded as an ‘xts’ (Extensible Time Series) object and assigned to a dataset using the stock symbol as the name. To convert the data to dataframe structure, we used 'as.data.frame(get(stock_index))' to change the structure. Then, we added `Date` column and `Stock Index` column and filtered the data to only keep the closing price.
+\n With a for-loop, we downloaded the closing price of each stock one by one and appended them together in one dataframe. 
+
+#### Stock symbols
+
+```{r}
+stock_list_streaming <- c("NFLX", "DIS", "T", "ROKU")
+stock_list_shopping <- c("AMZN", "OSTK", "APRN", "W", "ETSY", "CHWY", "FTCH")
+stock_list_entertainment <- c("EA", "NTDOY", "SCPL", "TTWO", "ATVI")
+stock_list_wfl <- c("ZM","CSCO", "EGHT", "RNG", "LOGM")
+stock_list_other <- c("MSFT", "GOOGL", "TWTR", "FB", "AAPL")
+
+#stock_list_streaming <- c("NFLX", "DIS", "T", "ROKU")
+#stock_list_shopping <- c("AMZN", "OSTK", "APRN", "W", "ETSY", "CHWY", "FTCH")
+#stock_list_entertainment <- c("EA", "NTDOY", "SCPL", "TTWO", "ATVI")
+#stock_list_wfl <- c("ZM", "CSCO", "EGHT", "RNG", "LOGM")
+#stock_list_other <- c("MSFT", "GOOGL", "TWTR", "FB")
+```
+
+#### Download and import data
+
+```{r}
+#Streaming companies
+streaming_stock <- NULL
+for (idx in seq(length(stock_list_streaming))){
+  stock_index = stock_list_streaming[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-01-01', to = "2020-12-11")
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  streaming_stock = rbind(streaming_stock, temp_df)
+}
+
+#streaming_df <- NULL
+#for (idx in seq(length(stock_list_streaming))){
+#  stock_index = stock_list_streaming[idx]
+#  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+#             from = '2020-03-01', to = "2020-11-01",)
+#  temp_df = as.data.frame(get(stock_index))
+#  temp_df$Date = row.names(temp_df)
+#  temp_df$Index = stock_index
+#  row.names(temp_df) = NULL
+#  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+#                        "Volume", "Adjusted", "Date", "Index")
+#  temp_df <- select(temp_df, Date, Index, Close)
+#  streaming_df = rbind(streaming_df, temp_df)
+#}
+#streaming_df <- streaming_df %>%
+#  pivot_wider(names_from = Index, values_from = Close)
+#write.csv(streaming_df, file='./data/streaming_stock.csv',row.names = FALSE)
+```
+
+```{r}
+# Online shopping companies
+shopping_stock <- NULL
+for (idx in seq(length(stock_list_shopping))){
+  stock_index = stock_list_shopping[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-01-01', to = "2020-12-11")
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  shopping_stock = rbind(shopping_stock, temp_df)
+}
+
+#shopping_df <- NULL
+#for (idx in seq(length(stock_list_shopping))){
+#  stock_index = stock_list_shopping[idx]
+#  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+#             from = '2020-03-01', to = "2020-11-01",)
+#  temp_df = as.data.frame(get(stock_index))
+#  temp_df$Date = row.names(temp_df)
+#  temp_df$Index = stock_index
+#  row.names(temp_df) = NULL
+#  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+#                        "Volume", "Adjusted", "Date", "Index")
+# temp_df <- select(temp_df, Date, Index, Close)
+# shopping_df = rbind(shopping_df, temp_df)
+#}
+#shopping_df<- shopping_df%>%
+#  pivot_wider(names_from = Index, values_from = Close)
+#write.csv(shopping_df, file='./data/shopping_stock.csv',row.names = FALSE)
+```
+
+```{r}
+# Entertainment companies
+entertainment_stock <- NULL
+for (idx in seq(length(stock_list_entertainment))){
+  stock_index = stock_list_entertainment[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-01-01', to = "2020-12-11")
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  entertainment_stock = rbind(entertainment_stock, temp_df)
+}
+
+#entertainment_df <- NULL
+#for (idx in seq(length(stock_list_entertainment))){
+#  stock_index = stock_list_entertainment[idx]
+#  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+#             from = '2020-03-01', to = "2020-11-01",)
+#  temp_df = as.data.frame(get(stock_index))
+#  temp_df$Date = row.names(temp_df)
+#  temp_df$Index = stock_index
+# row.names(temp_df) = NULL
+# colnames(temp_df) = c("Open", "High", "Low", "Close", 
+#                       "Volume", "Adjusted", "Date", "Index")
+# temp_df <- select(temp_df, Date, Index, Close)
+# entertainment_df = rbind(entertainment_df, temp_df)
+#}
+#
+#entertainment_df<- entertainment_df%>%
+# pivot_wider(names_from = Index, values_from = Close)
+#write.csv(entertainment_df, file='./data/entertainment_stock.csv',row.names = FALSE)
+```
+
+```{r}
+# Communication tech companies (virtual meeting)
+wfl_stock <- NULL
+for (idx in seq(length(stock_list_wfl))){
+  stock_index = stock_list_wfl[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-01-01', to = "2020-12-11")
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  wfl_stock = rbind(wfl_stock, temp_df)
+}
+
+#wfl_df <- NULL
+#for (idx in seq(length(stock_list_wfl))){
+#  stock_index = stock_list_wfl[idx]
+#  getSymbols(stock_index, verbose = TRUE,
+#             from = '2020-03-01', to = "2020-11-01",)
+#  temp_df = as.data.frame(get(stock_index))
+#  temp_df$Date = row.names(temp_df)
+#  temp_df$Index = stock_index
+#  row.names(temp_df) = NULL
+#  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+#                        "Volume", "Adjusted", "Date", "Index")
+#  temp_df <- select(temp_df, Date, Index, Close)
+#  wfl_df = rbind(wfl_df, temp_df)
+#}
+#wfl_df<- wfl_df%>%
+#   pivot_wider(names_from = Index, values_from = Close)
+#write.csv(wfl_df, file='./data/wfh_stock.csv',row.names = FALSE)
+```
+
+```{r}
+# Tech Giants (Integrated companies)
+other_stock <- NULL
+for (idx in seq(length(stock_list_other))){
+  stock_index = stock_list_other[idx]
+  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+             from = '2020-01-01', to = "2020-12-11")
+  temp_df = as.data.frame(get(stock_index))
+  temp_df$Date = row.names(temp_df)
+  temp_df$Index = stock_index
+  row.names(temp_df) = NULL
+  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+                        "Volume", "Adjusted", "Date", "Index")
+  temp_df <- select(temp_df, Date, Index, Close)
+  other_stock = rbind(other_stock, temp_df)
+}
+
+#other_df <- NULL
+#for (idx in seq(length(stock_list_other))){
+#  stock_index = stock_list_other[idx]
+#  getSymbols(stock_index, verbose = TRUE, src = "yahoo", 
+#             from = '2020-03-01', to = "2020-11-01",)
+#  temp_df = as.data.frame(get(stock_index))
+#  temp_df$Date = row.names(temp_df)
+#  temp_df$Index = stock_index
+#  row.names(temp_df) = NULL
+#  colnames(temp_df) = c("Open", "High", "Low", "Close", 
+#                        "Volume", "Adjusted", "Date", "Index")
+#  temp_df <- select(temp_df, Date, Index, Close)
+#  other_df = rbind(other_df, temp_df)
+#}
+#other_df<- other_df%>%
+# pivot_wider(names_from = Index, values_from = Close)
+#write.csv(other_df, file='./data/other_stock.csv',row.names = FALSE)
+```
+
+
+```{r}
+#standardize <-function(x)(x-mean(x,na.rm=TRUE))/sd(x, na.rm =TRUE)
+#
+#std_streaming_stock <-streaming_df %>%
+#  select_if(is.numeric)%>%
+#  map_df(~standardize(.x))%>%
+#  add_column(Date=streaming_df$Date)
+#
+#std_shopping_stock <-shopping_df %>%
+#  select_if(is.numeric)%>%
+#  map_df(~standardize(.x))%>%
+#  add_column(Date=shopping_df$Date)
+#
+#std_entertainment_stock <-entertainment_df %>%
+#  select_if(is.numeric)%>%
+#  map_df(~standardize(.x))%>%
+#  add_column(Date=entertainment_df$Date)
+#
+#std_wfh_stock <-wfl_df %>%
+#  select_if(is.numeric)%>%
+#  map_df(~standardize(.x))%>%
+#  add_column(Date=wfl_df$Date)
+#
+#std_other_stock <-other_df %>%
+#  select_if(is.numeric)%>%
+#  map_df(~standardize(.x))%>%
+#  add_column(Date=other_df$Date)
+```
+
+
+#### Scale stock closing price
+To scale the data, each closing price value is divided by the value of first date (January 2, 2020) for that stock and multiplied by 100.
+```{r}
+scale <- function(tidydf){
+  tidydf <- tidydf %>% group_by(Index) %>%
+    mutate(Close_scale = round(100*Close/Close[1], 2)) %>%
+    ungroup()
+}
+
+streaming_stock <- scale(streaming_stock)
+shopping_stock <- scale(shopping_stock)
+entertainment_stock <- scale(entertainment_stock)
+wfl_stock <- scale(wfl_stock)
+other_stock <- scale(other_stock)
+
+# Write these datasets into the 'data' folder
+write.csv(streaming_stock, file = "./data/streaming_stock.csv", row.names = FALSE)
+write.csv(shopping_stock, file = "./data/shopping_stock.csv", row.names = FALSE)
+write.csv(entertainment_stock, file = "./data/entertainment_stock.csv", row.names = FALSE)
+write.csv(wfl_stock, file = "./data/wfl_stock.csv", row.names = FALSE)
+write.csv(other_stock, file = "./data/other_stock.csv", row.names = FALSE)
+
+#scale <- function(tidydf){
+#  tidydf <- tidydf %>% group_by(Index) %>%
+#    mutate(Close_scale = round(100*Close/Close[1], 2)) %>%
+#    ungroup()
+#}
+
+#scaled_streaming_df <- scale(streaming_df)
+#scaled_shopping_df <- scale(shopping_df)
+#scaled_entertainment_df <- scale(entertainment_df)
+#scaled_wfl_df <- scale(wfl_df)
+#scaled_other_df <- scale(other_df)
+
+
+#write.csv(wfl_df, file='./output/scaled_streaming_stock.csv',row.names = FALSE)
+#write.csv(wfl_df, file='./output/scaled_shopping_stock.csv',row.names = FALSE)
+#write.csv(wfl_df, file='./output/scaled_entertainment_stock.csv',row.names = FALSE)
+#write.csv(wfl_df, file='./output/scaled_wfl_stock.csv',row.names = FALSE)
+#write.csv(wfl_df, file='./output/scaled_other_stock.csv',row.names = FALSE)
+```
+
+
+## Investors' confidence index
+For confidence index data,  there is a csv file on the website which is free to download. We can easily use ‘read.csv’  function in R to read in the data.  Drop the ‘standard error’ columns, and rename two ‘ index values’ columns to differentiate between institutional category and individual category. Moreover, the 'Date' column needs to be formatted in a way that corresponds with other two data source.  
+
+```{r}
+CI <- read.csv("./data/CI.csv")
+ci_index <-CI %>%
+  select(Date,US.Institutional.Index.Value,US.Individual.Index.Value)%>%
+  mutate(US.Institutional.Index.Value = as.numeric(US.Institutional.Index.Value),
+         US.Individual.Index.Value = as.numeric(US.Individual.Index.Value))%>%
+  drop_na()
+
+
+#Standardize monthly ci_index
+standardize <-function(x)(x-mean(x))/sd(x)
+ci_standized<-ci_index%>%
+  mutate(std_ind_index =  standardize(US.Individual.Index.Value),
+         std_inst_index= standardize(US.Institutional.Index.Value))
+
+
+#calulate average for every 3 month CI represent quarterly ci value
+ci_new <-ci_index[2:232, 2:3]
+n <- 3
+ci_quarterly<- aggregate(ci_new,list(rep(1:(nrow(ci_new)%/%n+1),each=n,len=nrow(ci_new))),mean)[-1]
+ci_quarterly <-read.csv("./data/ci_quarterly.csv")
+```
+
+<!--chapter:end:03-cleaning.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Missing values
+LogMeIn (LOGM)'s stock price contains missing values. The closing prices from September 1, 2020 to October 31, 2020 are missing. They are a contiguous piece of time series. We plan to keep them for now.
+\n There are no missing values involved in other parts. 
+
+<!--chapter:end:04-missing.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Results
+
+<!--chapter:end:05-results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+laskdjf
+
+<script src="https://d3js.org/d3.v6.js"></script>
+
+<div id='plot'></div>
+<script>
+      d3.select('div#plot').append('svg').attr('width', 1800).attr('height', 1500)
+      d3.select('svg').append('circle').attr('fill', 'orange').attr('cx' 500).attr('cy', 500).attr('r', 199)
+<script>
+
+<!--chapter:end:06-interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:07-conclusion.Rmd-->
+
